@@ -3,7 +3,7 @@
   "version": "1.0.5",
   "repository": "git@github.com:Liamta/exposure-utils.git",
   "description": "Dom and General Javascript Utilities, used in house at Exposure Digital",
-  "main": "dist/utils.js",
+  "main": "dist/utils.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "browserify ./src/Utils.js --standalone ExposureUtils > ./dist/utils.js",
