@@ -1,0 +1,29 @@
+{
+  "name": "exposure-utils",
+  "version": "1.0.0",
+  "description": "Dom and General Javascript Utilities, used in house at Exposure Digital",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "browserify ./src/Utils.js --standalone ExposureUtils > index.js",
+    "compile:minify": "minify ./index.js"
+  },
+  "keywords": [
+    "Javascript",
+    "Dom",
+    "Utils",
+    "Utilities",
+    "Exposure",
+    "Digital"
+  ],
+  "author": "Liam Annis",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-filesize": "0.0.6",
+    "gulp-plumber": "^1.1.0",
+    "gulp-uglify": "^2.0.0"
+  }
+}

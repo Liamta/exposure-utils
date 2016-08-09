@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "entry": "./app.js",
+  },
+  "dist": "../example/"
+}

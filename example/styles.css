@@ -1,0 +1,16 @@
+/**
+ * Styles
+ */
+
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	font-family: 'Helvetica Neue', 'Arial', Sans-serif;
+}
+
+h1 {
+	font-size: 28px;
+}
