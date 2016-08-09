@@ -3,6 +3,3 @@ node_modules
 
 # OS Ignores
 .DS_Store
-
-# NPM Ignores
-npm-debug.log
