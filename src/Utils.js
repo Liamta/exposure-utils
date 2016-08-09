@@ -324,3 +324,4 @@ var Utils = function() {
 };
 
 module.exports = Utils;
+exports = Utils;

@@ -325,6 +325,7 @@ var Utils = function() {
 };
 
 module.exports = Utils;
+exports = Utils;
 },{}],2:[function(require,module,exports){
 /**
  * Index.js
