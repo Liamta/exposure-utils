@@ -1,6 +1,8 @@
 {
-  "scripts": {
-    "entry": "./app.js",
-  },
-  "dist": "../example/"
+	"scripts": {
+		"entry": "./app.js",
+		"distName": "example",
+		"src": "./*.js"
+	},
+	"dist": "../example"
 }

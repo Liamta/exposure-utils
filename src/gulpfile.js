@@ -2,14 +2,7 @@
  * Gulpfile
  */
 
-var config = {
-	"scripts": {
-		"entry": "./index.js",
-		"distName": "prod",
-		"src": "./*.js"
-	},
-	"dist": "../example"
-};
+var config = require('./config');
 
 var gulp = require('gulp');
 var browserify = require('gulp-browserify');
