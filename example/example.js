@@ -214,29 +214,78 @@ var Utils = function() {
      * @param  {HTMLElement} el
      * @return {HTMLElement}
      */
-    Utils.el = function(el) {
+    Utils.getEl = function(el) {
 
-        var element = Utils._validateElement(el);
+        var element = Utils._validateElementString(el);
         return element;
 
     };
 
 
+    /**
+     * DOM Util
+     * Creating an element wit hthe option of passing
+     * initial attributes to it.
+     *
+     * @todo Sanitize element attributes and style properties before appending to the element
+     * 
+     * @public
+     * @method createEl
+     * @param {HTMLElement} el
+     * @param {Object} attr
+     */
+    Utils.createEl = function(el, attributes) {
+
+        var element = Utils.isNode(document.createElement(el)) === true ? document.createElement(el) : false;
+
+        if(attributes) {
+
+            Utils.forEach(attributes, function(prop, val) {
+                
+                element.setAttribute(prop, val);
+
+            });            
+
+        }
+
+        return element;
+
+    };
+
+
+    /**
+     * Internal Util
+     * Make sure our styles are valid
+     *
+     * @private
+     * @function validateStyleObj
+     * @param {String} Property
+     * @param {String} Value
+     */
+    Utils._validateStyleObj = function(prop, val) {
+
+        var el = document.createElement('div');
+        var _old = el.style = prop + ':' + val + ';';
+        el.style = prop + ':' + val + ';';
+        var _new = el.style = prop + ':' + val + ';';
+        return (_old == _new);
+
+    };
+
+
     /** 
-     * Internal Utils
+     * Internal Util
      * Check what element we're dealing with and if it exists
      *
      * @private
-     * @function validateElement
+     * @function validateElementString
      * @param {String} str
      */
-	Utils._validateElement = function(str) {
+	Utils._validateElementString = function(str) {
 
         var element;
 
-        /** 
-         * Classes
-         */
+        // Classes
         if(str.startsWith('.')) {
             
             var collection = document.querySelectorAll(str);
@@ -249,12 +298,7 @@ var Utils = function() {
                 Utils._invalidElement(str);
             }
 
-        }
-
-        /** 
-         * ID's
-         */
-        if(str.startsWith('#')) {
+        } else if(str.startsWith('#')) {
 
             var newStr = str.substring(1);
             element = document.getElementById(newStr);
@@ -263,12 +307,7 @@ var Utils = function() {
                 Utils._invalidElement(str);
             }
 
-        }
-
-        /** 
-         * Data Attributes
-         */
-        if(str.startsWith('[') && str.endsWith(']')) {
+        } else if(str.startsWith('[') && str.endsWith(']')) {
 
             var dataCollection = document.querySelectorAll(str);
 
@@ -277,6 +316,22 @@ var Utils = function() {
             } else if(dataCollection.length === 1) {
                 element = dataCollection[0];
             } else {
+                Utils._invalidElement(str);
+            }
+
+        } else {
+
+            var tagCollection = document.querySelectorAll(str);
+
+            if(tagCollection.length > 0 && tagCollection.length > 1) {
+                element = tagCollection;
+            } else if(tagCollection.length === 1) {
+                element = tagCollection[0];
+            } else {
+                Utils._invalidElement(str);
+            }
+
+            if(element === null || element === undefined) {
                 Utils._invalidElement(str);
             }
 
@@ -306,6 +361,7 @@ var Utils = function() {
 
 	/**
      * API
+     * 
 	 * @description Return Utils
 	 */
     return {
@@ -318,14 +374,13 @@ var Utils = function() {
         removeClass: Utils.removeClass,
         toggleClass: Utils.toggleClass,
         containsClass: Utils.containsClass,
-        el: Utils.el
-
+        getEl: Utils.getEl,
+        createEl: Utils.createEl
     };
 
 };
 
 module.exports = Utils;
-exports = Utils;
 },{}],2:[function(require,module,exports){
 /**
  * Index.js
@@ -336,23 +391,6 @@ var ExposureUtils = require('./Utils');
 document.addEventListener('DOMContentLoaded', function() {
 
 	var $ = new ExposureUtils();
-
-	var dom = document.querySelectorAll('.test');
-	var arr = [5, 3, 2, 8];	
-	var obj = {
-		prop1: 'Property 1',
-		prop2: 'Property 2',
-		prop3: {
-			'prop 3.1': 'Property 3.1'
-		}
-	};
-
-	var test = $.el('.test');
-	var test2 = $.el('#test2');
-	var test3 = $.el('[data-test]');
-
-	$.removeClass(test, 'testing');
-
 
 });
 },{"./Utils":1}]},{},[2])
