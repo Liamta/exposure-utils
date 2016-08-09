@@ -43,7 +43,4 @@ Equally you can instantiate it with the ``` new ``` keyword. Here's an example.
 IE 9+
 
 ### API
-API docs here,
-
-
-
+API docs here, [API Reference](https://github.com/Liamta/exposure-utils/wiki/API-Reference)
