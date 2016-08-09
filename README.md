@@ -1,4 +1,4 @@
-# Exposure Digital Dom and Javascript Utilites
+# Dom and Javascript Utilites
 A lightweight, modern javascript utility node module, for simplifying some basic functions and providing a cross browser dom manipulation API.
 
 ____________________________________________________________
