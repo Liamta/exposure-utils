@@ -5,10 +5,30 @@
  * @public
  * @class
  */
-
 var Utils = function() {
 
     'use strict';
+
+    /**
+     * General Util
+     * For iterating over Arrays and array-like objects (NodeLists, HTML Collections etc)
+     *
+     * @public
+     * @method each
+     * @param {Array|NodeList|HTMLCollection} iterable
+     * @param {Function} callback
+     * @return void
+     */
+    Utils.each = function(iterable, callback) {
+
+        for(var i = 0; i < iterable.length; i++) {
+            if(callback(iterable[i], i)) {
+                break;
+            }
+        }
+
+    };
+
 
     /**
      * General Util
@@ -30,27 +50,6 @@ var Utils = function() {
                 if(callback(key, value)) {
                     break;
                 }
-            }
-        }
-
-    };
-
-
-	/**
-     * General Util
-     * For iterating over Arrays and array-like objects (NodeLists, HTML Collections etc)
-     *
-     * @public
-     * @method each
-     * @param {Array|NodeList|HTMLCollection} iterable
-     * @param {Function} callback
-     * @return void
-     */
-    Utils.each = function(iterable, callback) {
-
-        for(var i = 0; i < iterable.length; i++) {
-            if(callback(iterable[i], i)) {
-                break;
             }
         }
 
@@ -209,11 +208,11 @@ var Utils = function() {
      * '#example', if exists will return you an ID'd DOM Element.
      *
      * @public
-     * @method el
+     * @method getElement
      * @param  {HTMLElement} el
-     * @return {HTMLElement}
+     * @return {HTMLElement} element
      */
-    Utils.getEl = function(el) {
+    Utils.getElement = function(el) {
 
         var element = Utils._validateElementString(el);
         return element;
@@ -223,17 +222,17 @@ var Utils = function() {
 
     /**
      * DOM Util
-     * Creating an element wit hthe option of passing
-     * initial attributes to it.
+     * Creating an element with the option of passing initial attributes to it.
      *
      * @todo Sanitize element attributes and style properties before appending to the element
      * 
      * @public
-     * @method createEl
+     * @method createElement
      * @param {HTMLElement} el
      * @param {Object} attr
+     * @return {HTMLElement} element
      */
-    Utils.createEl = function(el, attributes) {
+    Utils.createElement = function(el, attributes) {
 
         var element = Utils.isNode(document.createElement(el)) === true ? document.createElement(el) : false;
 
@@ -246,6 +245,27 @@ var Utils = function() {
             });            
 
         }
+
+        return element;
+
+    };
+
+
+    /**
+     * DOM Util
+     * Remove an element from the DOM
+     * 
+     * @public
+     * @method removeElement
+     * @param  {String} el
+     * @return {HTMLElement} element
+     */
+    Utils.removeElement = function(el) {
+
+        var element = Utils.getElement(el);
+        var parent = element.parentElement;
+
+        parent.removeChild(element);
 
         return element;
 
@@ -306,18 +326,6 @@ var Utils = function() {
                 Utils._invalidElement(str);
             }
 
-        } else if(str.startsWith('[') && str.endsWith(']')) {
-
-            var dataCollection = document.querySelectorAll(str);
-
-            if(dataCollection.length > 0 && dataCollection.length > 1) {
-                element = dataCollection;
-            } else if(dataCollection.length === 1) {
-                element = dataCollection[0];
-            } else {
-                Utils._invalidElement(str);
-            }
-
         } else {
 
             var tagCollection = document.querySelectorAll(str);
@@ -360,8 +368,9 @@ var Utils = function() {
 
 	/**
      * API
-     * 
-	 * @description Return Utils
+     * Returns Public Utils
+     *
+     * @return {Object} Public Utils
 	 */
     return {
         forEach: Utils.forEach,
@@ -373,8 +382,9 @@ var Utils = function() {
         removeClass: Utils.removeClass,
         toggleClass: Utils.toggleClass,
         containsClass: Utils.containsClass,
-        getEl: Utils.getEl,
-        createEl: Utils.createEl
+        getElement: Utils.getElement,
+        createElement: Utils.createElement,
+        removeElement: Utils.removeElement
     };
 
 };
