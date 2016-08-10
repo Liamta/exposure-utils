@@ -273,8 +273,58 @@ var Utils = function() {
 
 
     /**
+     * DOM Util
+     * Add HTML to element
+     * 
+     * @public
+     * @method html
+     * @param  {HTMLElement} el
+     * @param {String} str
+     * @return {HTMLElement} element
+     */
+    Utils.html = function(el, str) {
+
+        var element;
+
+        if(!Utils.isNode(el)) {
+            element = Utils.getElement(el);
+        } else {
+            element = el;
+        }
+
+        element.innerHTML = str;
+
+        return element;
+
+    };
+
+
+    /**
+     * DOM Util
+     * Adds styles to DOM Element
+     * @param  {String|HTMLElement} el
+     * @param  {Object} obj
+     * @return {HTMLElement} element
+     */
+    Utils.style = function(el, obj) {
+
+        var element = Utils._checkElement(el);
+        var stylesObj = Utils._validateStyleObj(obj) ? obj : null;
+
+        if(stylesObj) {
+            
+            Utils.forEach(stylesObj, function(styleName, styleValue) {
+                element.style[styleName] = styleValue;
+            });
+
+        }
+
+    };
+
+
+    /**
      * Internal Util
-     * Make sure our styles are valid
+     * Sanitize an object of CSS styles
      *
      * @private
      * @function validateStyleObj
@@ -351,6 +401,27 @@ var Utils = function() {
 
     /**
      * Internal Util
+     * Checks whether element
+     * @param  {String|HTMLElement} el
+     * @return {HTMLElement} element
+     */
+    Utils._checkElement = function(el) {
+
+        var element;
+
+        if(Utils.isNode(el)) {
+            element = el;
+        } else {
+            element = Utils._validateElementString(el);
+        }
+
+        return element;
+
+    };
+
+
+    /**
+     * Internal Util
      * Call if invalid elemnt
      *
      * @private
@@ -384,7 +455,9 @@ var Utils = function() {
         containsClass: Utils.containsClass,
         getElement: Utils.getElement,
         createElement: Utils.createElement,
-        removeElement: Utils.removeElement
+        removeElement: Utils.removeElement,
+        style: Utils.style,
+        html: Utils.html
     };
 
 };
