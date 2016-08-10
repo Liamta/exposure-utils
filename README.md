@@ -1,4 +1,4 @@
-# Exposure Digital Dom and Javascript Utilites
+# Dom and Javascript Utilites
 A lightweight, modern javascript utility node module, for simplifying some basic functions and providing a cross browser dom manipulation API.
 
 ____________________________________________________________
@@ -43,7 +43,4 @@ Equally you can instantiate it with the ``` new ``` keyword. Here's an example.
 IE 9+
 
 ### API
-API docs here,
-
-
-
+API docs here, [API Reference](https://github.com/Liamta/exposure-utils/wiki/API-Reference)
