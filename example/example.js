@@ -57,6 +57,26 @@ var Utils = function() {
     };
 
 
+    /**
+     * General Util
+     * Getting the distance between two objects of x and y positions
+     *
+     * @public
+     * @method distanceBetween
+     * @param {Object} objA
+     * @param {Object} objB
+     * @return {Number}
+     */
+    Utils.forEach = function(objA, objB) {
+
+        var diffX = objA.x - objB.x;
+        var diffY = objA.y - objB.y;
+
+        return Math.sqrt(diffX * diffX + diffY * diffY);
+
+    };
+
+
 	/**
      * DOM Util
      * Checking whether DOM Element is Node
@@ -447,6 +467,7 @@ var Utils = function() {
     return {
         forEach: Utils.forEach,
         each: Utils.each,
+        distanceBetween: Utils.distanceBetween,
         isNode: Utils.isNode,
         isNodeList: Utils.isNodeList,
         isCollection: Utils.isCollection,

@@ -6,10 +6,30 @@
  * @public
  * @class
  */
-
 var Utils = function() {
 
     'use strict';
+
+    /**
+     * General Util
+     * For iterating over Arrays and array-like objects (NodeLists, HTML Collections etc)
+     *
+     * @public
+     * @method each
+     * @param {Array|NodeList|HTMLCollection} iterable
+     * @param {Function} callback
+     * @return void
+     */
+    Utils.each = function(iterable, callback) {
+
+        for(var i = 0; i < iterable.length; i++) {
+            if(callback(iterable[i], i)) {
+                break;
+            }
+        }
+
+    };
+
 
     /**
      * General Util
@@ -37,23 +57,22 @@ var Utils = function() {
     };
 
 
-	/**
+    /**
      * General Util
-     * For iterating over Arrays and array-like objects (NodeLists, HTML Collections etc)
+     * Getting the distance between two objects of x and y positions
      *
      * @public
-     * @method each
-     * @param {Array|NodeList|HTMLCollection} iterable
-     * @param {Function} callback
-     * @return void
+     * @method distanceBetween
+     * @param {Object} objA
+     * @param {Object} objB
+     * @return {Number}
      */
-    Utils.each = function(iterable, callback) {
+    Utils.forEach = function(objA, objB) {
 
-        for(var i = 0; i < iterable.length; i++) {
-            if(callback(iterable[i], i)) {
-                break;
-            }
-        }
+        var diffX = objA.x - objB.x;
+        var diffY = objA.y - objB.y;
+
+        return Math.sqrt(diffX * diffX + diffY * diffY);
 
     };
 
@@ -210,33 +229,153 @@ var Utils = function() {
      * '#example', if exists will return you an ID'd DOM Element.
      *
      * @public
-     * @method el
+     * @method getElement
      * @param  {HTMLElement} el
-     * @return {HTMLElement}
+     * @return {HTMLElement} element
      */
-    Utils.el = function(el) {
+    Utils.getElement = function(el) {
 
-        var element = Utils._validateElement(el);
+        var element = Utils._validateElementString(el);
         return element;
 
     };
 
 
-    /** 
-     * Internal Utils
-     * Check what element we're dealing with and if it exists
+    /**
+     * DOM Util
+     * Creating an element with the option of passing initial attributes to it.
      *
-     * @private
-     * @function validateElement
-     * @param {String} str
+     * @todo Sanitize element attributes and style properties before appending to the element
+     * 
+     * @public
+     * @method createElement
+     * @param {HTMLElement} el
+     * @param {Object} attr
+     * @return {HTMLElement} element
      */
-	Utils._validateElement = function(str) {
+    Utils.createElement = function(el, attributes) {
+
+        var element = Utils.isNode(document.createElement(el)) === true ? document.createElement(el) : false;
+
+        if(attributes) {
+
+            Utils.forEach(attributes, function(prop, val) {
+                
+                element.setAttribute(prop, val);
+
+            });            
+
+        }
+
+        return element;
+
+    };
+
+
+    /**
+     * DOM Util
+     * Remove an element from the DOM
+     * 
+     * @public
+     * @method removeElement
+     * @param  {String} el
+     * @return {HTMLElement} element
+     */
+    Utils.removeElement = function(el) {
+
+        var element = Utils.getElement(el);
+        var parent = element.parentElement;
+
+        parent.removeChild(element);
+
+        return element;
+
+    };
+
+
+    /**
+     * DOM Util
+     * Add HTML to element
+     * 
+     * @public
+     * @method html
+     * @param  {HTMLElement} el
+     * @param {String} str
+     * @return {HTMLElement} element
+     */
+    Utils.html = function(el, str) {
 
         var element;
 
-        /** 
-         * Classes
-         */
+        if(!Utils.isNode(el)) {
+            element = Utils.getElement(el);
+        } else {
+            element = el;
+        }
+
+        element.innerHTML = str;
+
+        return element;
+
+    };
+
+
+    /**
+     * DOM Util
+     * Adds styles to DOM Element
+     * @param  {String|HTMLElement} el
+     * @param  {Object} obj
+     * @return {HTMLElement} element
+     */
+    Utils.style = function(el, obj) {
+
+        var element = Utils._checkElement(el);
+        var stylesObj = Utils._validateStyleObj(obj) ? obj : null;
+
+        if(stylesObj) {
+            
+            Utils.forEach(stylesObj, function(styleName, styleValue) {
+                element.style[styleName] = styleValue;
+            });
+
+        }
+
+    };
+
+
+    /**
+     * Internal Util
+     * Sanitize an object of CSS styles
+     *
+     * @private
+     * @function validateStyleObj
+     * @param {String} Property
+     * @param {String} Value
+     */
+    Utils._validateStyleObj = function(prop, val) {
+
+        var el = document.createElement('div');
+        var _old = el.style = prop + ':' + val + ';';
+        el.style = prop + ':' + val + ';';
+        var _new = el.style = prop + ':' + val + ';';
+        return (_old == _new);
+
+    };
+
+
+    /** 
+     * Internal Util
+     * Check what element we're dealing with and if it exists
+     *
+     * @private
+     * @function validateElementString
+     * @param {String} str
+     */
+	Utils._validateElementString = function(str) {
+
+        var element;
+
+        // Classes
         if(str.startsWith('.')) {
             
             var collection = document.querySelectorAll(str);
@@ -249,12 +388,7 @@ var Utils = function() {
                 Utils._invalidElement(str);
             }
 
-        }
-
-        /** 
-         * ID's
-         */
-        if(str.startsWith('#')) {
+        } else if(str.startsWith('#')) {
 
             var newStr = str.substring(1);
             element = document.getElementById(newStr);
@@ -263,23 +397,43 @@ var Utils = function() {
                 Utils._invalidElement(str);
             }
 
-        }
+        } else {
 
-        /** 
-         * Data Attributes
-         */
-        if(str.startsWith('[') && str.endsWith(']')) {
+            var tagCollection = document.querySelectorAll(str);
 
-            var dataCollection = document.querySelectorAll(str);
-
-            if(dataCollection.length > 0 && dataCollection.length > 1) {
-                element = dataCollection;
-            } else if(dataCollection.length === 1) {
-                element = dataCollection[0];
+            if(tagCollection.length > 0 && tagCollection.length > 1) {
+                element = tagCollection;
+            } else if(tagCollection.length === 1) {
+                element = tagCollection[0];
             } else {
                 Utils._invalidElement(str);
             }
 
+            if(element === null || element === undefined) {
+                Utils._invalidElement(str);
+            }
+
+        }
+
+        return element;
+
+    };
+
+
+    /**
+     * Internal Util
+     * Checks whether element
+     * @param  {String|HTMLElement} el
+     * @return {HTMLElement} element
+     */
+    Utils._checkElement = function(el) {
+
+        var element;
+
+        if(Utils.isNode(el)) {
+            element = el;
+        } else {
+            element = Utils._validateElementString(el);
         }
 
         return element;
@@ -306,11 +460,14 @@ var Utils = function() {
 
 	/**
      * API
-	 * @description Return Utils
+     * Returns Public Utils
+     *
+     * @return {Object} Public Utils
 	 */
     return {
         forEach: Utils.forEach,
         each: Utils.each,
+        distanceBetween: Utils.distanceBetween,
         isNode: Utils.isNode,
         isNodeList: Utils.isNodeList,
         isCollection: Utils.isCollection,
@@ -318,8 +475,11 @@ var Utils = function() {
         removeClass: Utils.removeClass,
         toggleClass: Utils.toggleClass,
         containsClass: Utils.containsClass,
-        el: Utils.el
-
+        getElement: Utils.getElement,
+        createElement: Utils.createElement,
+        removeElement: Utils.removeElement,
+        style: Utils.style,
+        html: Utils.html
     };
 
 };
