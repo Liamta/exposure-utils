@@ -66,7 +66,7 @@ var Utils = function() {
      * @param {Object} objB
      * @return {Number}
      */
-    Utils.forEach = function(objA, objB) {
+    Utils.distanceBetween = function(objA, objB) {
 
         var diffX = objA.x - objB.x;
         var diffY = objA.y - objB.y;
