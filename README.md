@@ -1,6 +1,8 @@
 # Dom and Javascript Utilites
 A lightweight, modern javascript utility node module, for simplifying some basic functions and providing a cross browser dom manipulation API.
 
+This library is by no means perfect, extensive or complete. So if you think of a feature/spot a bug, pull request that shit!
+
 ____________________________________________________________
 
 ### Install
