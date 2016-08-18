@@ -7,8 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "browserify ./src/Utils.js --standalone ExposureUtils > ./dist/utils.js",
-    "compile:minify": "minify ./dist/utils.js",
-    "prepublish": "npm run compile:minify"
+    "compile:minify": "minify ./dist/utils.js"
   },
   "keywords": [
     "Javascript",
