@@ -1,6 +1,6 @@
 {
   "name": "exposure-utils",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "repository": "git@github.com:Liamta/js-utils.git",
   "description": "Dom and General Javascript Utilities, used in house at Exposure Digital",
   "main": "dist/utils.min.js",
