@@ -6,9 +6,10 @@
  * @public
  * @class
  */
-var Utils = function() {
+var Utils = function(element) {
 
     'use strict';
+
 
     /**
      * General Util
@@ -67,7 +68,7 @@ var Utils = function() {
      * @param {Object} objB
      * @return {Number}
      */
-    Utils.forEach = function(objA, objB) {
+    Utils.distanceBetween = function(objA, objB) {
 
         var diffX = objA.x - objB.x;
         var diffY = objA.y - objB.y;
@@ -84,7 +85,7 @@ var Utils = function() {
      * @public
      * @method isNode
      * @param {HTML Element} el  HTML Element
-     * @return bool
+     * @return {Bool}
      */
     Utils.isNode = function(el) {
 
@@ -103,7 +104,7 @@ var Utils = function() {
      * @public
      * @method isNodeList
      * @param {HTML Element} el  HTML Element
-     * @return bool
+     * @return {Bool}
      */
     Utils.isNodeList = function(el) {
 
@@ -210,7 +211,7 @@ var Utils = function() {
      * @public
      * @method containsClass
 	 * @param  {String} cls  CSS Class
-	 * @return bool
+	 * @return {Bool}
 	 */
 	Utils.containsClass = function(el, cls) {
 
@@ -260,9 +261,7 @@ var Utils = function() {
         if(attributes) {
 
             Utils.forEach(attributes, function(prop, val) {
-                
                 element.setAttribute(prop, val);
-
             });            
 
         }
@@ -323,6 +322,7 @@ var Utils = function() {
     /**
      * DOM Util
      * Adds styles to DOM Element
+     * 
      * @param  {String|HTMLElement} el
      * @param  {Object} obj
      * @return {HTMLElement} element
@@ -376,8 +376,10 @@ var Utils = function() {
         var element;
 
         // Classes
-        if(str.startsWith('.')) {
-            
+        if(Utils._startsWith('.', str)) {
+
+            console.log('class');
+
             var collection = document.querySelectorAll(str);
             
             if(collection.length > 0 && collection.length > 1) {
@@ -388,7 +390,9 @@ var Utils = function() {
                 Utils._invalidElement(str);
             }
 
-        } else if(str.startsWith('#')) {
+        } else if(Utils._startsWith('#', str)) {
+
+            console.log('ID');
 
             var newStr = str.substring(1);
             element = document.getElementById(newStr);
@@ -398,6 +402,8 @@ var Utils = function() {
             }
 
         } else {
+
+            console.log('TAG');
 
             var tagCollection = document.querySelectorAll(str);
 
@@ -422,7 +428,10 @@ var Utils = function() {
 
     /**
      * Internal Util
-     * Checks whether element
+     * Checks whether what is being passed in is an element, or a string
+     *
+     * @private
+     * @function checkElement
      * @param  {String|HTMLElement} el
      * @return {HTMLElement} element
      */
@@ -448,13 +457,30 @@ var Utils = function() {
      * @private
      * @function invalidElement
      * @param {String} str
-     * @return void
+     * @return {Bool} false
      */
     Utils._invalidElement = function(str) {
 
         console.warn('Utils.el (', str, 'not found in DOM )');
         return false;
 
+    };
+
+
+    /**
+     * Internal Util
+     * Cross browser solution to .startsWith()
+     * 
+     * @param  {String} str
+     * @param  {Word} word
+     * @return {Bool}
+     */
+    Utils._startsWith = function(needle, haystack) {
+
+        return (haystack.substr(0, needle.length) == needle);
+
+
+        // return str.lastIndexOf(word, 0) === 0;
     };
 
 
@@ -495,6 +521,10 @@ var ExposureUtils = require('./Utils');
 document.addEventListener('DOMContentLoaded', function() {
 
 	var $ = new ExposureUtils();
+
+	var body = $.getElement('body');
+	console.log(body);
+
 
 });
 },{"./Utils":1}]},{},[2])
