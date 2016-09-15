@@ -377,8 +377,6 @@ var Utils = function(element) {
         // Classes
         if(Utils._startsWith('.', str)) {
 
-            console.log('class');
-
             var collection = document.querySelectorAll(str);
             
             if(collection.length > 0 && collection.length > 1) {
@@ -391,8 +389,6 @@ var Utils = function(element) {
 
         } else if(Utils._startsWith('#', str)) {
 
-            console.log('ID');
-
             var newStr = str.substring(1);
             element = document.getElementById(newStr);
 
@@ -401,8 +397,6 @@ var Utils = function(element) {
             }
 
         } else {
-
-            console.log('TAG');
 
             var tagCollection = document.querySelectorAll(str);
 
