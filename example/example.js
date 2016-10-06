@@ -8,8 +8,6 @@
  */
 var Utils = function(element) {
 
-    'use strict';
-
 
     /**
      * General Util
@@ -24,9 +22,7 @@ var Utils = function(element) {
     Utils.each = function(iterable, callback) {
 
         for(var i = 0; i < iterable.length; i++) {
-            if(callback(iterable[i], i)) {
-                break;
-            }
+            if(callback(iterable[i], i)) break;
         }
 
     };
@@ -49,9 +45,7 @@ var Utils = function(element) {
 
                 var value = obj[key];
 
-                if(callback(key, value)) {
-                    break;
-                }
+                if(callback(key, value)) break;
             }
         }
 
@@ -132,8 +126,8 @@ var Utils = function(element) {
     };
 	
 
-	/**
-	 * DOM Util
+    /**
+     * DOM Util
      * Appending class to DOM Element
      *
      * @public
@@ -192,11 +186,8 @@ var Utils = function(element) {
         var count = classes.length;
 
         while (--count >= 0) {
-
-            if (classes[count] === cls) {
+            if (classes[count] === cls)
                 classes.splice(count, 1);
-            }
-
         }
 
         el.className = classes.join(' ');
@@ -236,8 +227,7 @@ var Utils = function(element) {
      */
     Utils.getElement = function(el) {
 
-        var element = Utils._validateElementString(el);
-        return element;
+        return Utils._validateElementString(el);
 
     };
 
@@ -261,12 +251,15 @@ var Utils = function(element) {
         if(attributes) {
 
             Utils.forEach(attributes, function(prop, val) {
-                element.setAttribute(prop, val);
+
+                if(prop === 'style') Utils.style(element, val);
+                    else element.setAttribute(prop, val);
+
             });            
 
         }
 
-        return element;
+        return element === false ? console.warn('Couldn\'t create element', el) : element;
 
     };
 
@@ -306,11 +299,8 @@ var Utils = function(element) {
 
         var element;
 
-        if(!Utils.isNode(el)) {
-            element = Utils.getElement(el);
-        } else {
-            element = el;
-        }
+        if(!Utils.isNode(el)) element = Utils.getElement(el);
+            else element = el;
 
         element.innerHTML = str;
 
@@ -323,9 +313,8 @@ var Utils = function(element) {
      * DOM Util
      * Adds styles to DOM Element
      * 
-     * @param  {String|HTMLElement} el
-     * @param  {Object} obj
-     * @return {HTMLElement} element
+     * @param {String|HTMLElement} el
+     * @param {Object} obj
      */
     Utils.style = function(el, obj) {
 
@@ -339,6 +328,55 @@ var Utils = function(element) {
             });
 
         }
+
+    };
+
+
+    /**
+     * Add multiple events to single DOM element
+     * 
+     * @param {HTMLElement} el
+     * @param {String} evts
+     * @param {Function} func
+     */
+    Utils.addEventListener = function(el, evts, func) {
+
+        var evtsArray = evts.split(' ');
+        
+        Utils.each(evtsArray, function(evt, i) {
+            el.addEventListener(evt, func);
+        });
+
+    };
+
+
+    /**
+     * AJAX Call wrapper
+     *
+     * @public
+     * @function AJAX 
+     * @param {String} url
+     * @param {Function} successCallback
+     * @param {Function} failCallback
+     */
+    Utils.AJAX = function(url, successCallback, failCallback) {
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+
+            console.log([xhr]);
+
+            if(xhr.readyState === 4) {
+                successCallback(xhr.responseText);
+            } else {
+                failCallback(xhr.responseText);
+            }
+
+        };
+
+        xhr.open('GET', url, true);
+
 
     };
 
@@ -393,9 +431,7 @@ var Utils = function(element) {
             var newStr = str.substring(1);
             element = document.getElementById(newStr);
 
-            if(element === null || element === undefined) {
-                Utils._invalidElement(str);
-            }
+            if(element === null || element === undefined) Utils._invalidElement(str);
 
         } else {
 
@@ -409,9 +445,7 @@ var Utils = function(element) {
                 Utils._invalidElement(str);
             }
 
-            if(element === null || element === undefined) {
-                Utils._invalidElement(str);
-            }
+            if(element === null || element === undefined) Utils._invalidElement(str);
 
         }
 
@@ -433,11 +467,8 @@ var Utils = function(element) {
 
         var element;
 
-        if(Utils.isNode(el)) {
-            element = el;
-        } else {
-            element = Utils._validateElementString(el);
-        }
+        if(Utils.isNode(el)) element = el; 
+            else element = Utils._validateElementString(el);
 
         return element;
 
@@ -455,8 +486,7 @@ var Utils = function(element) {
      */
     Utils._invalidElement = function(str) {
 
-        console.warn('Utils.el (', str, 'not found in DOM )');
-        return false;
+        return console.warn('Element -', str, 'not found in DOM.');
 
     };
 
@@ -465,16 +495,14 @@ var Utils = function(element) {
      * Internal Util
      * Cross browser solution to .startsWith()
      * 
-     * @param  {String} str
-     * @param  {Word} word
+     * @param {String} needle
+     * @param {String} Haystack
      * @return {Bool}
      */
     Utils._startsWith = function(needle, haystack) {
 
         return (haystack.substr(0, needle.length) == needle);
 
-
-        // return str.lastIndexOf(word, 0) === 0;
     };
 
 
@@ -498,6 +526,8 @@ var Utils = function(element) {
         getElement: Utils.getElement,
         createElement: Utils.createElement,
         removeElement: Utils.removeElement,
+        AJAX: Utils.AJAX,
+        addEventListener: Utils.addEventListener,
         style: Utils.style,
         html: Utils.html
     };
@@ -510,15 +540,30 @@ module.exports = Utils;
  * Index.js
  */
 
-var ExposureUtils = require('./Utils');
+var $ = require('./Utils')();
 
 document.addEventListener('DOMContentLoaded', function() {
 
-	var $ = new ExposureUtils();
-
 	var body = $.getElement('body');
-	console.log(body);
+	
+	var test = $.createElement('img', {
+		class: 'test',
+		dataid: 0,
+		style: {
+			marginLeft: '50px',
+			height: '500px',
+			width: '500px',
+			backgroundColor: 'grey'
+		}
+	});
 
+	var data = $.AJAX('http://httpbin.org/get', function(res) {
+		console.log('me is success');
+	}, function(res) {
+		console.log('failed');
+	});
+
+	body.appendChild(test);
 
 });
 },{"./Utils":1}]},{},[2])

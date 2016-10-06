@@ -14,3 +14,7 @@ html, body {
 h1 {
 	font-size: 28px;
 }
+
+.hiden {
+	opacity: 0;
+}
